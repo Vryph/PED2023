@@ -1,0 +1,135 @@
+Lista de atividades - Listas Lineares
+
+Referência de estudo para listas lineares: https://www.geeksforgeeks.org/introduction-to-linear-data-structures/
+
+Para todas as atividades, escolha uma linguagem de programação de sua preferência. Recomenda-se o C#, que foi a linguagem utilizada em sala durante a disciplina.
+As atividades podem ser feitas em aplicações de texto em console ou visualmente em uma game engine.
+
+Lembrando que a nota é composta pelos Resultados de Aprendizagem da disciplina, com diferentes pesos:
+	RA1(3.0) - Identifica qual é a estrutura de dados mais adequada para a resolução de um problema real.
+	RA2(5.0) - Programa estruturas de dados e algoritmos, organizando-os em uma biblioteca de classes.
+	RA3(2.0) - Reconhece diferentes estratégias para otimização e performance, considerando uso da memória e processador.
+
+1 - Implementação de estruturas de dados (RA2)
+	Implemente as seguintes estruturas de dados lineares, com as funções especificadas. Os nomes dos campos e funções são sugestões. As estruturas podem ser implementadas de maneiras diferentes, desde que atendam a funcionalidade esperada.
+
+    1.1 - Linked Node (Nó Encadeado)
+        Classe que carrega um valor e também indica o próximo nó e o nó anterior. Utilizado como base das demais estruturas.
+
+        Campos:
+            value - O valor carregado por este nó.
+            previous - O nó imediatamente anterior a este.
+            next - O nó que vem imediatamente após este.
+
+        Funções:
+            InsertAfter(other) - Insere este nó após o nó recebido como parâmetro.
+            InsertBefore(other) - Insere este nó antes do nó recebido como parâmetro.
+            Detach() - Remove as conexões que este nó tem com os nós anterior e próximo, reestruturando a cadeia.
+
+    1.2 - Linked List (Lista Encadeada)
+        Classe que permite a adição e remoção de um número arbitrário de valores seguidos uns dos outros.
+
+        Campos:
+            head - Primeiro item da lista.
+            tail - Último item da lista.
+
+        Funções:
+            Append(value) - Adiciona um valor ao final da lista.
+            Prepend(value) - Adiciona um valor no início da lista.
+            Clear() - Remove todos os valores da lista.
+            Count() - Retorna a quantidade de elementos na lista.
+            Get(index) - Retorna o valor no índice especificado.
+            Contains(value) - Retorna verdadeiro se o valor existe na lista.
+            Remove(value) - Remove o valor especificado, se ele existir na lista.
+            RemoveAt(index) - Remove o valor no índice especificado.
+
+    1.3 - Stack (Pilha)
+        Classe que permite adição de número arbitrário de valores, mas limita a remoção e adição de elementos ao topo da pilha.
+
+        Campos:
+            top - Item no topo da pilha.
+
+        Funções:
+            Push(value) - Adiciona um valor no topo da pilha.
+            Pop() - Remove e retorna o valor no topo da pilha.
+            Peek() - Retorna o valor no topo da pilha, sem removê-lo.
+            Clear() - Remove todos os valore da pilha.
+            Count() - Retorna a quantidade de elementos na pilha.
+
+    1.4 - Queue (Fila)
+        Classe que permite adição de número arbitrário de valores, mas limita as operações de adição e remoção.
+
+        Campos:
+            first - O item em primeira posição na fila.
+            last - O item no final da fila, que foi adicionado por último.
+
+        Funções:
+            Enqueue(value) - Adiciona um valor ao final da fila.
+            Dequeue() - Remove o valor na primeira posição da fila.
+            First() - Retorna o valor na primeira posição da fila.
+            Last() - Retorna o valor na última posição da fila.
+            Clear() - Remove todos os valores da fila.
+            Count() - Retorna a quantidade de elementos na fila.
+
+    1.5 - Iterator (Iterador)
+        Classe que abstrai o conceito de iterar, passar por itens de uma estrurura linear sequencialmente. Similar à funcionalidade de um nó, mas esconde as funções que podem alterar a ordem dos itens. O iterador pode ser aplicado para diferentes estruturas lineares. Por isso, é interessante o uso de classes abstratas na sua implementação, criando uma interface que pode ser reutilizada para implementações específicas de lista, fila, pilha, entre outras.
+
+        Funções:
+            Get() - Retorna o valor atual apontado pelo iterador.
+            Set(value) - Altera o valor atual apontado pelo iterador.
+            Next() - Avança para o próximo valor da estrutura.
+            Valid() - Retorna uma boleana que indica se o iterador está apontando para um item válido. Um iterador fica inválido quando passa do último elemento da estrutura linear.
+
+
+2 - Lista - Sistema de Inventário (RA1 e RA2)
+	Implemente um sistema de inventário com limitação de peso, utilizando a sua implementação de listas encadeadas. Durante a execução do programa, o usuário poderá coletar itens de uma pequena lista de loot e colocálos no inventário, desde a adição do item não faça ultrapassar o limite de peso do inventário.
+	
+	O programa deve ter as seguintes opções
+	1. Procurar itens: Gera uma lista de 3 itens coletáveis aleatórios a partir de todos os itens disponíveis. Caso já exista uma lista de itens coletáveis, ela é esvaziada antes da operação de procura.
+	2. Coletar item: Seleciona e remove um item da lista de coletáveis e o põe no inventário, se permitido pelo limite de peso.
+	3. Largar item: Seleciona e remove um item do inventário o põe na lista de itens coletáveis.
+	
+	
+	Sugestão de lista de itens
+	Nome    | peso
+	--------------
+	pedra   | 3.f
+	machado | 1.5f
+	joia    | 0.5f
+	fruta   | 0.25f
+	arco    | 1.f
+	espada  | 2.f
+	enxada  | 1.5f
+	balde   | 1.0f
+	escudo  | 1.25f
+	flecha  | 0.1f
+
+3 - Pilha - Torre de Hanoi (RA1 e RA2)
+	Implemente uma versão do jogo da Torre de Hanoi(https://pt.wikipedia.org/wiki/Torre_de_Han%C3%B3i) usando a sua implementação da estrutura de pilha. O objetivo do jogo é reconstruir a torre de discos em outro lugar. O jogador pode mover um disco por vez, mas NÃO É PERMITIDO colocar um disco maior sobre um disco menor. Recomenda-se implementar uma versão com 4 discos.
+	
+	Fluxo do jogo:
+	1. Ao iniciar, uma das pilhas é preenchida com os discos empilhados do maior para o menor.
+	2. Após isso, o jogador pode selecionar uma pilha da qual retirar um disco.
+	3. Caso tenha selecionado uma pilha que contenha discos, o jogador retira o disco do topo daquela pilha e pode então selecionar em qual pilha colocá-lo.
+	4. Caso o jogador tente colocar um disco em uma pilha inválida, ou pegar de uma pilha vazia, uma mensagem de erro aparece.
+	5. Após conseguir empilhar todos os discos em uma pilha diferente da inicial, uma mensagem de sucesso aparece.
+
+4 - Fila - Simulador de boliche (RA1 e RA2)
+	Implemente um "simulador de boliche", usando a sua implementação de fila. O programa simula automaticamente 3 rodadas de boliche, com as regras:
+	
+	 1. No inicio do jogo, 3 jogadores são adicionados a uma fila.
+	 2. Antes da primeira rodada, 5 bolas numeradas de 1 a 3 são adicionadas à uma fila, podendo haver bolas com numeração repetida.
+	 3. A ordem das jogadas é definida pela fila de jogadores. Cada jogador tem direito a 2 lances por rodada.
+	 4. A cada jogada, o jogador pega uma bola da fila de bolas e a usa para tentar derrubar os 10 pinos.
+	 5. Quanto maior a numeração da bola, maior a chance do lance ser desperdiçado com a bola indo para fora da pista.
+	 6. Quanto maior a numeração da bola, maior a chance dela derrubar um pino, nos casos em que a bola não sai da pista.
+	 7. Após um lance, o número de pinos derrubados é adicionado à pontuação do jogador que fez o lance.
+	 8. Após um lance, a bola utilizada volta para o fim da fila de bolas.
+	 9. Caso o jogador derrube todos os pinos e ainda tenha direito a um lance, os pinos são reposicionados.
+	10. Ao fim da jogada de um jogador, os pinos são reposicionados.
+	11. Após sua jogada, o jogador entra em uma nova fila, para a próxima rodada.
+	12. Depois que todos jogadores da fila inicial terminam suas jogadas, uma nova rodada se inicia com a nova fila de jogadores.
+	13. O jogo termina após o fim da terceira rodada, listando as pontuações dos jogadores.
+
+5 - Análise das estruturas (RA3)
+	Escreva um comentário, analisando e comparando as diferentes estruturas de dados lineares(listas, pilhas, filas, etc). Quais são suas vantagens sobre o uso de simples arrays? E quais as desvantagens? Quais as diferenças das implementações destas estruturas com o uso de nós em comparação com o uso de arrays?
