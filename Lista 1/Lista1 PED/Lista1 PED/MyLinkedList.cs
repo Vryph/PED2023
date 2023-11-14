@@ -8,8 +8,11 @@ namespace Lista1_PED
 {
     internal class MyLinkedList<Valuetype>
     {
-        MyNode<ValueType>? head;
-        MyNode<ValueType>? tail;
+        private MyNode<ValueType>? head;
+        private MyNode<ValueType>? tail;
+
+        public MyNode<ValueType>? Head => head;
+        public MyNode<ValueType>? Tail => tail;
 
         public MyLinkedList() {
             head = null;
@@ -154,6 +157,8 @@ namespace Lista1_PED
                 indexCount++;
             }
 
+            if(head == current) { head = current.Next; }
+            if(tail == current) { tail = current.Previous; }
             current.Detach();
         }
     }

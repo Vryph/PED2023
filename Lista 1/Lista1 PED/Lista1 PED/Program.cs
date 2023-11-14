@@ -20,6 +20,8 @@ Console.Write($"{node1.Previous.value}  - ");
 Console.WriteLine($"{node2.Next.value}");
 
 //Teste da Lista ----------------------------
+Console.WriteLine();
+Console.WriteLine();
 
 MyLinkedList<float> myList = new MyLinkedList<float>();
 myList.Append(1);
@@ -45,4 +47,40 @@ myList.Print();
 Console.WriteLine("Limpando a Lista...");
 myList.Clear();
 myList.Print();
+
+//Teste da Pilha ---------------------------------------------------------------
+Console.WriteLine();
+Console.WriteLine();
+
+MyStack<float> myStack = new MyStack<float>();
+myStack.Push(10);
+myStack.Push(20);
+myStack.Push(30);
+Console.WriteLine($"Número de Valores na Pilha {myStack.Count()}");
+Console.WriteLine($"{myStack.Pop()} removido");
+Console.WriteLine($"Topo da Pilha = {myStack.Peek()}");
+
+Console.WriteLine("Limpando a lista");
+myStack.Clear();
+Console.WriteLine($"Topo da Pilha = {myStack.Peek()}");
+
+//Teste Fila ---------------------------------------------------------------------
+Console.WriteLine();
+Console.WriteLine();
+
+MyQueue<float> myQueue = new MyQueue<float>();
+myQueue.Enqueue(5);
+myQueue.Enqueue(10);
+myQueue.Enqueue(15);
+myQueue.Enqueue(30);
+
+Console.WriteLine($"Número de Valores na Fila = {myQueue.Count()}");
+Console.WriteLine($"Primeiro valor = {myQueue.First()}");
+Console.WriteLine($"Último valor = {myQueue.Last()}");
+myQueue.Dequeue();
+Console.WriteLine($"Dequeue: Primeiro valor = {myQueue.First()}");
+myQueue.Clear();
+Console.WriteLine($"Clear: Primeiro valor = {myQueue.First()}, Último valor = {myQueue.Last()}");
+
+
 
