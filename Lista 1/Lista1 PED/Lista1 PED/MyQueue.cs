@@ -11,6 +11,7 @@ namespace Lista1_PED
         private MyNode<ValueType>? first;
         private MyNode<ValueType>? last;
 
+
         public MyQueue()
         {
             first = null;
@@ -78,6 +79,19 @@ namespace Lista1_PED
                 current = current.Next;
             }
             return count;
+        }
+
+        //Print para o minigame de Boliche
+        public void PrintBowling()
+        {
+            MyNode<ValueType>? current = first;
+            Console.Write("Fila de bolas: ");
+            while (current != null)
+            {
+                Console.Write($"({current.value})");
+                current = current.Next;
+            }
+            Console.WriteLine();
         }
     }
 }

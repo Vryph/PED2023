@@ -15,14 +15,19 @@ allLootList.Append(1.0f, "balde");
 allLootList.Append(1.5f, "escudo");
 allLootList.Append(0.1f, "flecha");
 int inventoryState = 0;
-//Setup Hannoi
+//Setup Hannoi ----------------------------------------------------
 int hannoiState = 0;
 string selectedPiece = "A";
 int hannoiCount = 0;
 MyStack<string> hannoiTower0 = new MyStack<string>();
 MyStack<string> hannoiTower1 = new MyStack<string>();
 MyStack<string> hannoiTower2 = new MyStack<string>();
-
+//Setup Boliche --------------------------------------------------
+MyQueue<string> playersQueue = new MyQueue<string>();
+MyQueue<float> ballsQueue = new MyQueue<float>();
+MyQueue<int> pointsQueue = new MyQueue<int>();
+Random rng = new Random();
+int bowlingRound = 0;
 // Inicio Codigo
 Menu();
 
@@ -52,6 +57,7 @@ void Menu()
     if(opcao == "1") { Testes(); }
     else if(opcao == "2") { Console.Clear();  Inventory(); }
     else if (opcao == "3") { Console.Clear(); Hannoi(); }
+    else if (opcao == "4") { Console.Clear(); Bowling(); }
     else { opcao = "0";  Menu(); }
 }
 void Testes() {
@@ -423,4 +429,84 @@ void Hannoi()
             Hannoi();
 
 }
-    
+
+void Bowling()
+{
+    bowlingRound = 1;
+    playersQueue.Clear();
+    playersQueue.Enqueue("Juca");
+    playersQueue.Enqueue("Ana");
+    playersQueue.Enqueue("Bruno");
+    pointsQueue.Clear();
+    pointsQueue.Enqueue(0);
+    pointsQueue.Enqueue(0);
+    pointsQueue.Enqueue(0);
+    ballsQueue.Clear();
+    for(int i = 0; i < 5; i++)
+    {
+        int peso = rng.Next(1, 4);
+        ballsQueue.Enqueue(peso);
+    }
+
+    while(bowlingRound <= 3)
+    {
+        BowlingRodada();
+    }
+
+    Console.WriteLine("JOGO TERMINADO!");
+    for(int i = 0; i< 3; i++) { Console.WriteLine($"{playersQueue.First()}: {pointsQueue.First()} pontos"); playersQueue.Dequeue(); pointsQueue.Dequeue(); }
+
+    string option = "fuieryofhwiahfoihwefiwjioufhweriughiwerhgiwuerhgiuwehrgwherighweirghweihgiwrhgiewhrighweoi";
+    Console.Write($"Aperte Enter para voltar ao Menu");
+    option = Console.ReadLine();
+    if (option != "fuieryofhwiahfoihwefiwjioufhweriughiwerhgiwuerhgiuwehrgwherighweirghweihgiwrhgiewhrighweoi")
+    {
+        Menu();
+    }
+
+}
+
+void BowlingRodada()
+{
+    Console.WriteLine($"Round {bowlingRound} INICIADO: ");
+    ballsQueue.PrintBowling();
+
+
+    for(int i = 0; i < playersQueue.Count(); i++)
+    {
+        int pinos = 10;
+        int playerPoints = 0;
+        Console.WriteLine($"   Vez de {playersQueue.First()}:");
+        for (int j = 0; j < 2; j++)
+        {
+            int roundPoints = 0;
+            int miss = rng.Next(13);
+            if (miss - ballsQueue.First() <= 0) 
+            { Console.WriteLine($"      {playersQueue.First()} lancou a bola {ballsQueue.First()}, mas ela foi para fora da pista."); }
+            else 
+            {
+                for(int g = 0; g < pinos; g++)
+                {
+                    int hit = rng.Next(101);
+                    if (ballsQueue.First() == 3 && hit <= 80) { roundPoints++; }
+                    else if (ballsQueue.First() == 2 && hit <= 65) { roundPoints++; }
+                    if (ballsQueue.First() == 1 && hit <= 45) { roundPoints++; }
+                }
+                if(roundPoints == 0) { roundPoints++; }
+                Console.WriteLine($"      {playersQueue.First()} lancou a bola {ballsQueue.First()}! {roundPoints} pinos foram derrubados.");
+                pinos = pinos - roundPoints;
+                if(pinos == 0) { pinos = 10; }
+            }
+            ballsQueue.Enqueue(ballsQueue.First());
+            ballsQueue.Dequeue();
+            playerPoints += roundPoints;
+        }
+        playersQueue.Enqueue(playersQueue.First());
+        playersQueue.Dequeue();
+        pointsQueue.Enqueue(pointsQueue.First() + playerPoints);
+        pointsQueue.Dequeue();
+    }
+    Console.WriteLine($"ROUND {bowlingRound} TERMINADO!");
+    Console.WriteLine("");
+    bowlingRound++;
+}
