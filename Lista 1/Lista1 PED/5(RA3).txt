@@ -1,0 +1,12 @@
+5 - Análise das estruturas (RA3)
+	Escreva um comentário, analisando e comparando as diferentes estruturas de dados lineares(listas, pilhas, filas, etc). Quais são suas vantagens sobre o uso de simples arrays? E quais as desvantagens? Quais as diferenças das implementações destas estruturas com o uso de nós em comparação com o uso de arrays?
+
+
+R:Pilhas e Filas tem a vantagem ideológica de serem estruturas mais leves, ocupando menos lugar na memória, pelo fato de guardarem menos informações, mas elas são grandemente limitadas quando se está tentando fazer algum código dinâmico,
+especialmente quando é necessário "navegar" entre os dados no meio da estrutura e alterá-los.
+Listas são muito mais flexíveis em comparação e tem muito mais aplicações, porém em tese também é a estrutura que requer a maior quantia de memória para funcionar.
+As vantagens de se usar essas estruturas sobre Arrays normais tem como foco a facilidade de uso e implementação e a liberdade especialmente quando se trata de expandir o número de elementos nas estruturas.
+A principal desvantagem é o maior e mais ineficiente uso de memória, por conta das "conexões", também é relativamente comum essas estruturas desperdiçarem espaço na memória, por conta de "buracos" quando os dados são movidos de lugar ou deletados.
+Quando essas estruturas são implementadas com o uso de Arrays elas adquiram parte das características dos Arrays, por exemplo,
+os dados são armazenados próximos e compactos na memória, porém parte da falta de dinâmica e liberdade na hora de implementação também são traduzidos quando trabalhando com Arrays, o maior problema sendo na hora de aumentar seu tamanho,
+algo que além de sentir "clunky" pode consumir grandes quantidades de memória quando transferindo os dados do velho para o novo Array. Em certas estruturas como Árvores o uso de Arrays ao invés de "Nós" também causa com que a ordem dos dados se torne muito mais confusa.

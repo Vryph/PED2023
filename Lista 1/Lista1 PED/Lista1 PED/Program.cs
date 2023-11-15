@@ -148,6 +148,32 @@ void Testes() {
     Console.WriteLine();
     Console.WriteLine();
 
+    MyIteratorList<float> myIteratorList = new MyIteratorList<float>();
+    myIteratorList.Append(2);
+    myIteratorList.Append(4);
+    myIteratorList.Append(8);
+    myIteratorList.Append(6);
+    myIteratorList.Append(12);
+    myIteratorList.Append(10);
+
+    Console.WriteLine("Iterator somando 2 no print:");
+    var iterator = myIteratorList.GetMyIterator();
+    while (iterator.Valid())
+    {
+        Console.Write($"{iterator.Get() + 2} ");
+        iterator.Next();
+    }
+
+    Console.WriteLine();
+    iterator.Reset(myIteratorList);
+    Console.WriteLine("Iterator setando todos os valores para 5");
+    while (iterator.Valid())
+    {
+        iterator.Set(5);
+        Console.Write($"{iterator.Get()} ");
+        iterator.Next();
+    }
+
     //Fim-------------------------
     Console.WriteLine("Aperte Enter para voltar ao Menu.");
     string retorno = "0";
