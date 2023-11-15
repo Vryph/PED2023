@@ -1,5 +1,6 @@
 ﻿using Lista1_PED;
 
+//Setup inventario -----------------------------------------------
 MyInventoryList<float> inventoryList = new MyInventoryList<float>();
 MyInventoryList<float> lootList = new MyInventoryList<float>();
 MyInventoryList<float> allLootList = new MyInventoryList<float>();
@@ -13,18 +14,34 @@ allLootList.Append(1.5f, "enxada");
 allLootList.Append(1.0f, "balde");
 allLootList.Append(1.5f, "escudo");
 allLootList.Append(0.1f, "flecha");
-
 int inventoryState = 0;
+//Setup Hannoi
+int hannoiState = 0;
+string selectedPiece = "A";
+int hannoiCount = 0;
+MyStack<string> hannoiTower0 = new MyStack<string>();
+MyStack<string> hannoiTower1 = new MyStack<string>();
+MyStack<string> hannoiTower2 = new MyStack<string>();
 
-
+// Inicio Codigo
 Menu();
 
 void Menu()
 {
+    //Clear Minigames --------------------------------------
     inventoryList.Clear();
     lootList.Clear();
     inventoryState = 0;
+    hannoiState = 0;
+    hannoiCount = 0;
+    hannoiTower0.Clear();
+    hannoiTower1.Clear();
+    hannoiTower2.Clear();
+    hannoiTower0.Push("C");
+    hannoiTower0.Push("B");
+    hannoiTower0.Push("A");
 
+    //Menu Options ----------------------------------------
     Console.Clear();
     Console.WriteLine($"Escolha uma das opcoes dos exercícios: ");
     Console.WriteLine($"1 - Testes das estruturas de dados");
@@ -34,6 +51,7 @@ void Menu()
     string opcao = Console.ReadLine();
     if(opcao == "1") { Testes(); }
     else if(opcao == "2") { Console.Clear();  Inventory(); }
+    else if (opcao == "3") { Console.Clear(); Hannoi(); }
     else { opcao = "0";  Menu(); }
 }
 void Testes() {
@@ -225,3 +243,184 @@ void Inventory()
 
     Inventory();
 }
+
+void Hannoi()
+{
+    //Print the Towers
+    Console.WriteLine("              |");
+    Console.WriteLine($"TORRE 0: ---> |{hannoiTower0.PrintTower()}");
+    Console.WriteLine("              |");
+    Console.WriteLine("              |");
+    Console.WriteLine($"TORRE 1: ---> |{hannoiTower1.PrintTower()}");
+    Console.WriteLine("              |");
+    Console.WriteLine("              |");
+    Console.WriteLine($"TORRE 2: ---> |{hannoiTower2.PrintTower()}");
+    Console.WriteLine("              |");
+
+    //Opções
+    if (hannoiState == 0)
+    {
+        Console.WriteLine("Digitar um número inexistente te leva-ra ao Menu");
+        Console.WriteLine("");
+        Console.Write("Selecione uma torre para PEGAR um disco:");
+        string option = Console.ReadLine();
+
+        //GameState1 - Selecionar uma Peça -------------------------------------------------------------
+        if (option == "0")
+        {
+            if (hannoiTower0.Peek() != null)
+            {
+                selectedPiece = hannoiTower0.Pop();
+                hannoiState = 1;
+                Console.Clear();
+            }
+            else { Console.Clear(); Console.WriteLine("TORRE VAZIA!"); }
+        }
+        else if (option == "1")
+        {
+            if (hannoiTower1.Peek() != null)
+            {
+                selectedPiece = hannoiTower1.Pop();
+                hannoiState = 1;
+                Console.Clear();
+            }
+            else { Console.Clear(); Console.WriteLine("TORRE VAZIA!"); }
+        }
+        else if (option == "2")
+        {
+            if (hannoiTower2.Peek() != null)
+            {
+                selectedPiece = hannoiTower2.Pop();
+                hannoiState = 1;
+                Console.Clear();
+            }
+            else { Console.Clear(); Console.WriteLine("TORRE VAZIA!"); }
+        }
+        else
+        {
+            Menu();
+        }
+    }
+    else if (hannoiState == 1) //Gamestate 2 - Selecionar Torre ----------------------------------------------
+    {
+        Console.Write($"Selecione uma torre para SOLTAR o disco ({selectedPiece}): ");
+        string option = Console.ReadLine();
+        if (option == "0")
+        {
+            Console.Clear();
+            if (selectedPiece == "A")
+            {
+                hannoiTower0.Push("A");
+                hannoiState = 0;
+                hannoiCount++;
+            }
+            else if (selectedPiece == "B")
+            {
+                if (hannoiTower0.Peek() == "A") { Console.Clear(); Console.WriteLine("MOVIMENTO PROIBIDO: (B) > (A)!"); }
+                else
+                {
+                    hannoiTower0.Push("B");
+                    hannoiState = 0;
+                    hannoiCount++;
+                }
+            }
+            else
+            {
+                if (hannoiTower0.Peek() == null)
+                {
+                    hannoiTower0.Push("C");
+                    hannoiState = 0;
+                    hannoiCount++;
+                }
+                else if (hannoiTower0.Peek() == "B") { Console.Clear(); Console.WriteLine("MOVIMENTO PROIBIDO: (C) > (B)!"); }
+                else { Console.WriteLine("MOVIMENTO PROIBIDO: (C) > (A)!"); }
+            }
+        }
+        else if (option == "1")
+        {
+            Console.Clear();
+            if (selectedPiece == "A")
+            {
+                hannoiTower1.Push("A");
+                hannoiState = 0;
+                hannoiCount++;
+            }
+            else if (selectedPiece == "B")
+            {
+                if (hannoiTower1.Peek() == "A") { Console.Clear(); Console.WriteLine("MOVIMENTO PROIBIDO: (B) > (A)!"); }
+                else
+                {
+                    hannoiTower1.Push("B");
+                    hannoiState = 0;
+                    hannoiCount++;
+                }
+            }
+            else
+            {
+                if (hannoiTower1.Peek() == null)
+                {
+                    hannoiTower1.Push("C");
+                    hannoiState = 0;
+                    hannoiCount++;
+                }
+                else if (hannoiTower1.Peek() == "B") {  Console.WriteLine("MOVIMENTO PROIBIDO: (C) > (B)!"); }
+                else { Console.WriteLine("MOVIMENTO PROIBIDO: (C) > (A)!"); }
+            }
+        }
+        else if (option == "2")
+        {
+            Console.Clear();
+            if (selectedPiece == "A")
+            {
+                hannoiTower2.Push("A");
+                hannoiState = 0;
+                hannoiCount++;
+            }
+            else if (selectedPiece == "B")
+            {
+                if (hannoiTower2.Peek() == "A") { Console.Clear(); Console.WriteLine("MOVIMENTO PROIBIDO: (B) > (A)!"); }
+                else
+                {
+                    hannoiTower2.Push("B");
+                    hannoiState = 0;
+                    hannoiCount++;
+                }
+            }
+            else
+            {
+                if (hannoiTower2.Peek() == null)
+                {
+                    hannoiTower2.Push("C");
+                    hannoiState = 0;
+                    hannoiCount++;
+                }
+                else if (hannoiTower2.Peek() == "B") {  Console.WriteLine("MOVIMENTO PROIBIDO: (C) > (B)!"); }
+                else { Console.WriteLine("MOVIMENTO PROIBIDO: (C) > (A)!"); }
+            }
+        }
+        else { Console.Clear();  Console.WriteLine("TORRE INVALIDA!"); }
+    }
+    else
+    {
+        string option = "fuieryofhwiahfoihwefiwjioufhweriughiwerhgiwuerhgiuwehrgwherighweirghweihgiwrhgiewhrighweoi";
+        Console.Write($"VITORIA EM {hannoiCount} MOVIMENTOS!!! Pressione Enter para voltar ao Menu");
+        option = Console.ReadLine();
+        if (option != "fuieryofhwiahfoihwefiwjioufhweriughiwerhgiwuerhgiuwehrgwherighweirghweihgiwrhgiewhrighweoi")
+        {
+            Menu();
+        }
+    }
+    //Ganhou?
+    if(hannoiCount >= 0)
+    {
+        int tower1Count = hannoiTower1.Count();
+        int tower2Count = hannoiTower2.Count();
+        if(tower1Count == 3 || tower2Count == 3)
+        {
+            hannoiState = 2;
+        }
+    }
+            Hannoi();
+
+}
+    

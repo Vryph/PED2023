@@ -69,5 +69,35 @@ namespace Lista1_PED
             }
             return count;
         }
+
+        public string PrintTower()
+        {
+            int count = Count();
+            if(count == 0)
+            {
+                return ("-------------");
+            }
+            else if(count == 3)
+            {
+                return ($"-(C)-(B)-(A)-");
+            }
+            else if(count == 2)
+            {
+                string top = Peek().ToString();
+                if(top == "A")
+                {
+                    return ($"-(B)-(A)-----");
+                }
+                else
+                {
+                    return ($"-(C)-(B)-----");
+                }
+            }
+            else
+            {
+                string top = Peek().ToString();
+                return ($"-({top})---------");
+            }
+        }
     }
 }
