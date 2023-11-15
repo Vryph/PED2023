@@ -1,9 +1,30 @@
 ﻿using Lista1_PED;
 
+MyInventoryList<float> inventoryList = new MyInventoryList<float>();
+MyInventoryList<float> lootList = new MyInventoryList<float>();
+MyInventoryList<float> allLootList = new MyInventoryList<float>();
+allLootList.Append(3.0f, "pedra");
+allLootList.Append(1.5f, "machado");
+allLootList.Append(0.5f, "joia");
+allLootList.Append(0.25f, "fruta");
+allLootList.Append(1.0f, "arco");
+allLootList.Append(2.0f, "espada");
+allLootList.Append(1.5f, "enxada");
+allLootList.Append(1.0f, "balde");
+allLootList.Append(1.5f, "escudo");
+allLootList.Append(0.1f, "flecha");
+
+int inventoryState = 0;
+
+
 Menu();
 
 void Menu()
 {
+    inventoryList.Clear();
+    lootList.Clear();
+    inventoryState = 0;
+
     Console.Clear();
     Console.WriteLine($"Escolha uma das opcoes dos exercícios: ");
     Console.WriteLine($"1 - Testes das estruturas de dados");
@@ -12,6 +33,7 @@ void Menu()
     Console.WriteLine($"4 - Simulador de Boliche");
     string opcao = Console.ReadLine();
     if(opcao == "1") { Testes(); }
+    else if(opcao == "2") { Console.Clear();  Inventory(); }
     else { opcao = "0";  Menu(); }
 }
 void Testes() {
@@ -107,5 +129,99 @@ void Testes() {
     string retorno = "0";
     retorno = Console.ReadLine();
     if(retorno != null) { retorno = "0"; Menu(); }
+
 }
 
+void Inventory()
+{
+    //Prints loot
+    Console.WriteLine("LOOT DISPONIVEL");
+    lootList.Print();
+
+    //Prints Inventory
+    Console.WriteLine("INVENTARIO");
+    Console.WriteLine($"CAPACIDADE:{String.Format("{0 : 0.00}", inventoryList.weight)}/10.00 ({inventoryList.Count()} itens)");
+    inventoryList.Print();
+
+    // Options + Input + Explains
+    if(inventoryState == 0) // Menu Principal
+    {
+        Console.WriteLine("Selecione uma opcao");
+        Console.WriteLine("0 - Procurar Itens");
+        Console.WriteLine("1 - Pegar Item");
+        Console.WriteLine("2 - Largar Item");
+        Console.WriteLine();
+        Console.WriteLine("Aperte qualquer outra coisa para voltar ao menu");
+
+        string option = Console.ReadLine();
+        if (option == "0")
+        {
+            lootList.RandomizeLoot();
+            Console.Clear();
+            Console.WriteLine("Novos Itens Encontrados");
+        }
+        else if(option == "1")
+        {
+            inventoryState = 1;
+            Console.Clear();
+        }
+        else if(option == "2")
+        {
+            inventoryState = 2;
+            Console.Clear();
+        }
+        else
+        {
+            Menu();
+        }
+    }
+    else if(inventoryState == 1) //Pegar intens do chao
+    {
+        Console.WriteLine("Selecione um item para PEGAR, ou -1 para voltar");
+        string lootInput = Console.ReadLine();
+        if(int.TryParse(lootInput, out _) == true && lootInput != "-1")
+        {
+            Console.Clear();
+            int lootOption = int.Parse(lootInput);
+            if (lootList.GetValue(lootOption) != null)
+            {
+                if (inventoryList.weight + float.Parse(lootList.GetValue(lootOption).ToString()) <= 10.0f)
+                {
+                    inventoryList.Append(lootList.GetValue(lootOption), lootList.GetName(lootOption));
+                    inventoryList.weight += float.Parse(lootList.GetValue(lootOption).ToString());
+                    lootList.RemoveAt(lootOption);
+                }
+                else { Console.WriteLine($"Sem espaco para {lootList.GetName(lootOption)}"); }
+            }
+            else { Console.WriteLine("OPCAO INVALIDA"); }
+        }
+        else
+        {
+            inventoryState = 0;
+            Console.Clear();
+        }
+    }
+    else // Tirar Itens do Inventário
+    {
+        Console.WriteLine("Selecione um item para LARGAR, ou -1 para voltar");
+        string inventoryInput = Console.ReadLine();
+        if (int.TryParse(inventoryInput, out _) == true && inventoryInput != "-1")
+        {
+            Console.Clear();
+            int inventoryOption = int.Parse(inventoryInput);
+            if (inventoryList.GetValue(inventoryOption) != null)
+            {
+                inventoryList.weight -= float.Parse(inventoryList.GetValue(inventoryOption).ToString());
+                inventoryList.RemoveAt(inventoryOption);
+            }
+            else { Console.WriteLine("OPCAO INVALIDA"); }
+        }
+        else
+        {
+            inventoryState = 0;
+            Console.Clear();
+        }
+    }
+
+    Inventory();
+}
