@@ -20,6 +20,7 @@ namespace Lista2_PED
             head = null;
             tail = null;
         }
+
         //Adiciona um valor ao final da lista
         public void Append(ValueType value, string itemName, float cooldown)
         {
@@ -38,6 +39,7 @@ namespace Lista2_PED
             }
         }
 
+
         //Adiciona um valor no início da lista
         public void Preppend(ValueType value, string itemName, float cooldown)
         {
@@ -55,6 +57,22 @@ namespace Lista2_PED
             }
         }
 
+
+        //Insere um novo Node no indice especificado
+        public void Insert(ValueType value, string itemName, float cooldown, int index)
+        {
+            MyInventoryNode<ValueType>? node = GetNodeByIndex(index);
+            if(index <= 0) { Preppend(value, itemName, cooldown); }
+            else if( node == null) { Append(value, itemName, cooldown); }
+            else
+            {
+                var newNode = new MyInventoryNode<ValueType>(value, itemName, cooldown);
+                newNode.InsertBefore(node);
+            }
+
+        }
+
+
         //Limpa todos os valores da lista
         public void Clear()
         {
@@ -68,6 +86,7 @@ namespace Lista2_PED
             }
             head = tail = null;
         }
+
 
         //Devolve o número de elementos da lista
         public int Count()
@@ -84,42 +103,33 @@ namespace Lista2_PED
         }
 
 
-        //Devolve o valor que existe no index fornecido
-        public ValueType? GetValue(int index)
+        //Retorna o Nó no índice especificado
+        public MyInventoryNode<ValueType> GetNodeByIndex(int index)
+        {
+            MyInventoryNode<ValueType>? node = head;
+            int currentIndex = 0;
+            while(currentIndex != index)
+            {
+                if (node == null) { break; }
+                node = node.Next;
+                currentIndex++;
+            }
+            return node;
+        }
+
+        public int GetNodeIndex(MyInventoryNode<ValueType>? node)
         {
             MyInventoryNode<ValueType>? current = head;
             int indexCount = 0;
-            
-            while(indexCount != index)
+            while (current.itemName != node.itemName)
             {
-                if(current == null)
-                {
-                    return null;
-                }
+                if (current == null) { break; }
                 current = current.Next;
                 indexCount++;
             }
-            if (current == null) { return null; }
-            return current.value;
+            return indexCount;
         }
 
-        public string? GetName(int index)
-        {
-            MyInventoryNode<ValueType>? current = head;
-            int indexCount = 0;
-
-            while (indexCount != index)
-            {
-                if (current == null)
-                {
-                    return null;
-                }
-                current = current.Next;
-                indexCount++;
-            }
-            if (current == null) { return null; }
-            return current.itemName;
-        }
 
         //Retorna verdadeiro se o valor fornecido existe na lista
         public bool Contains(ValueType value)
@@ -136,21 +146,18 @@ namespace Lista2_PED
             return false;
         }
 
-        //Remove todos os itens que tenham o valor fornecido
-        public void Remove(ValueType? value)
+
+        //Remove um node fornecido
+        public void RemoveNode(MyInventoryNode<ValueType> node)
         {
-            MyInventoryNode<ValueType>? current = head;
-            MyInventoryNode<ValueType>? nextNode = head;
-            while (nextNode != null)
-            {
-                nextNode = nextNode.Next;
-                if (current.value.Equals(value))
-                {
-                   current.Detach();
-                }
-                current = nextNode;
-            }
+            if (node == null) { return; }
+            
+            if(node == head) { head = node.Next; }
+            if(node == tail) { tail = node.Previous; }
+
+            node.Detach();
         }
+
 
         //Remove o valor no index fornecido
         public void RemoveAt(int index)
@@ -180,6 +187,7 @@ namespace Lista2_PED
             }
         }
 
+
         //Imprime a Lista no Console
         public void Print()
         {
@@ -194,6 +202,52 @@ namespace Lista2_PED
                 current = current.Next;
             }
             Console.WriteLine();
+        }
+
+        //"Troca" os Nodes de Lugar
+        public void SwapNodes(MyInventoryNode<ValueType> node1, MyInventoryNode<ValueType> node2)
+        {
+            
+            int tempIndex = GetNodeIndex(node1);
+            if (tempIndex != GetNodeIndex(node2))
+            {
+                if (tempIndex < GetNodeIndex(node2))
+                {
+                    Insert(node1.value, node1.itemName, node1.cooldown, GetNodeIndex(node2));
+                    RemoveNode(node1);
+                    Insert(node2.value, node2.itemName, node2.cooldown, tempIndex);
+                    RemoveNode(node2);
+                }
+                else
+                {
+                    tempIndex = GetNodeIndex(node2);
+                    Insert(node2.value, node2.itemName, node2.cooldown, GetNodeIndex(node1));
+                    RemoveNode(node2);
+                    Insert(node1.value, node1.itemName, node1.cooldown, tempIndex);
+                    RemoveNode(node1);
+                }
+            }
+        }
+
+
+        //Sorts---------------------------------------------------------------------------------
+        public void BubbleSort()
+        {
+            int n = Count(), i, j;
+            bool swapped;
+            MyInventoryNode<ValueType>? node1, node2;
+            for(i = 0; i < n - 1; i++)
+            {
+                swapped = false;
+                for( j = 0; j < n - 1; j++)
+                {
+                    node1 = GetNodeByIndex(j);
+                    node2 = node1.Next;
+                    if(node1.cooldown > node2.cooldown) { swapped = true; SwapNodes(node1, node2); }
+
+                }
+                if(swapped == false) { break; }
+            }
         }
     }
 }
