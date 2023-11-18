@@ -209,24 +209,26 @@ namespace Lista2_PED
         //"Troca" os Nodes de Lugar
         public void SwapNodes(MyInventoryNode<ValueType> node1, MyInventoryNode<ValueType> node2)
         {
-            
-            int tempIndex = GetNodeIndex(node1);
-            if (tempIndex != GetNodeIndex(node2))
+            if (GetNodeIndex(node1) != GetNodeIndex(node2))
             {
-                if (tempIndex < GetNodeIndex(node2))
+                int tempIndex = GetNodeIndex(node1);
+                if (tempIndex != GetNodeIndex(node2))
                 {
-                    Insert(node1.value, node1.itemName, node1.cooldown, GetNodeIndex(node2));
-                    RemoveNode(node1);
-                    Insert(node2.value, node2.itemName, node2.cooldown, tempIndex);
-                    RemoveNode(node2);
-                }
-                else
-                {
-                    tempIndex = GetNodeIndex(node2);
-                    Insert(node2.value, node2.itemName, node2.cooldown, GetNodeIndex(node1));
-                    RemoveNode(node2);
-                    Insert(node1.value, node1.itemName, node1.cooldown, tempIndex);
-                    RemoveNode(node1);
+                    if (tempIndex < GetNodeIndex(node2))
+                    {
+                        Insert(node1.value, node1.itemName, node1.cooldown, GetNodeIndex(node2));
+                        RemoveNode(node1);
+                        Insert(node2.value, node2.itemName, node2.cooldown, tempIndex);
+                        RemoveNode(node2);
+                    }
+                    else
+                    {
+                        tempIndex = GetNodeIndex(node2);
+                        Insert(node2.value, node2.itemName, node2.cooldown, GetNodeIndex(node1));
+                        RemoveNode(node2);
+                        Insert(node1.value, node1.itemName, node1.cooldown, tempIndex);
+                        RemoveNode(node1);
+                    }
                 }
             }
         }
@@ -266,6 +268,38 @@ namespace Lista2_PED
 
                 }
                 if(swapped == false) { break; }
+            }
+        }
+
+        public void SelectionSort(Func<ValueType, ValueType, bool> predicate, int type)
+        {
+            int n = Count(), i, j;
+            MyInventoryNode<ValueType>? nodeI, nodeJ, nodeMin;
+            for(i = 0; i < n - 1; i++)
+            {
+                nodeI = nodeMin = GetNodeByIndex(i);
+                for (j = i + 1; j < n; j++)
+                {
+                    nodeJ = GetNodeByIndex(j);
+                    switch (type)
+                    {
+                        case < 1:
+                            if (predicate(nodeMin.value, nodeJ.value)) { nodeMin = nodeJ; }
+                            break;
+                        case < 2:
+                            if (predicate(nodeMin.cooldown, nodeJ.cooldown)) { nodeMin = nodeJ; }
+                            break;
+                        case < 3:
+                            if (predicate(nodeMin.dps, nodeJ.dps)) { nodeMin = nodeJ; }
+                            break;
+                        case < 4:
+                            if (predicate(String.Compare(nodeMin.itemName, nodeJ.itemName), 0)) { nodeMin = nodeJ; }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                SwapNodes(nodeI, nodeMin);
             }
         }
     }
