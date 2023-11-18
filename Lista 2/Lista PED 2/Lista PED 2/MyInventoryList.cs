@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Lista2_PED
 {
@@ -117,6 +118,7 @@ namespace Lista2_PED
             return node;
         }
 
+        //Retorna o índice do nó especificado, usando o nome(situacional).
         public int GetNodeIndex(MyInventoryNode<ValueType>? node)
         {
             MyInventoryNode<ValueType>? current = head;
@@ -231,7 +233,7 @@ namespace Lista2_PED
 
 
         //Sorts---------------------------------------------------------------------------------
-        public void BubbleSort()
+        public void BubbleSort(Func<ValueType, ValueType, bool> predicate, int type)
         {
             int n = Count(), i, j;
             bool swapped;
@@ -239,11 +241,28 @@ namespace Lista2_PED
             for(i = 0; i < n - 1; i++)
             {
                 swapped = false;
-                for( j = 0; j < n - 1; j++)
+                for( j = 0; j < n - i - 1; j++)
                 {
                     node1 = GetNodeByIndex(j);
                     node2 = node1.Next;
-                    if(node1.cooldown > node2.cooldown) { swapped = true; SwapNodes(node1, node2); }
+
+                    switch (type)
+                    {
+                        case < 1:
+                            if(predicate(node1.value, node2.value)) { swapped = true; SwapNodes(node1, node2); }
+                            break;
+                        case < 2:
+                            if (predicate(node1.cooldown, node2.cooldown)) { swapped = true; SwapNodes(node1, node2); }
+                            break;
+                        case < 3:
+                            if (predicate(node1.dps, node2.dps)) { swapped = true; SwapNodes(node1, node2); }
+                            break;
+                        case < 4:
+                            if (predicate(String.Compare(node1.itemName, node2.itemName), 0)) { swapped = true; SwapNodes(node1, node2); }
+                            break;
+                        default:
+                            break;
+                    }
 
                 }
                 if(swapped == false) { break; }
