@@ -132,6 +132,19 @@ namespace Lista2_PED
             return indexCount;
         }
 
+        //Retorna o Node com o nome especificado
+        public MyInventoryNode<ValueType> GetNodeByName(string name)
+        {
+            MyInventoryNode<ValueType>? current = head;
+            int indexCount = 0;
+            while (current.itemName != name)
+            {
+                if (current == null) { break; }
+                current = current.Next;
+                indexCount++;
+            }
+            return current;
+        }
 
         //Retorna verdadeiro se o valor fornecido existe na lista
         public bool Contains(ValueType value)
@@ -271,6 +284,7 @@ namespace Lista2_PED
             }
         }
 
+
         public void SelectionSort(Func<ValueType, ValueType, bool> predicate, int type)
         {
             int n = Count(), i, j;
@@ -300,6 +314,82 @@ namespace Lista2_PED
                     }
                 }
                 SwapNodes(nodeI, nodeMin);
+            }
+        }
+
+
+        public void MergeSortSort(int l, int r, Func<ValueType, ValueType, bool> predicate, int type)
+        {
+            if(l < r)
+            {
+                int m = l + (r - l) / 2;
+                MergeSortSort(l, m, predicate, type);
+                MergeSortSort(m + 1, r, predicate, type);
+
+                MergeSortMerge(l, m, r, predicate, type);
+            }
+        }
+
+        public void MergeSortMerge(int l, int m, int r, Func<ValueType, ValueType, bool> predicate, int type)
+        {
+            int n1 = m - l + 1;
+            int n2 = r - m;
+
+            MyInventoryList<ValueType> L = new MyInventoryList<ValueType>();
+            MyInventoryList<ValueType> R = new MyInventoryList<ValueType>();
+            int i, j;
+
+            for(i = 0; i < n1; i++)
+            {
+                MyInventoryNode<ValueType> tempNodeL = GetNodeByIndex(l + i);
+                L.Append(tempNodeL.value, tempNodeL.itemName, tempNodeL.cooldown);
+            }
+            for(j=0; j < n2; j++)
+            {
+                MyInventoryNode<ValueType> tempNodeR = GetNodeByIndex(m + 1 + j);
+                R.Append(tempNodeR.value, tempNodeR.itemName, tempNodeR.cooldown);
+            }
+
+            i = j = 0;
+
+            int k = l;
+            while(i < n1 && j < n2)
+            {
+                MyInventoryNode<ValueType> nodeL = L.GetNodeByIndex(i), nodeR = R.GetNodeByIndex(j);
+                switch (type)
+                {
+                    case < 1:
+                        if (predicate(nodeR.value, nodeL.value)) { SwapNodes(GetNodeByIndex(k),GetNodeByName(nodeL.itemName)); i++; }
+                        else { SwapNodes(GetNodeByIndex(k),GetNodeByName(nodeR.itemName)); j++; }
+                        break;
+                    case < 2:
+                        if (predicate(nodeR.cooldown, nodeL.cooldown)) { SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeL.itemName)); i++; }
+                        else { SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeR.itemName)); j++; }
+                        break;
+                    case < 3:
+                        if (predicate(nodeR.dps, nodeL.dps)) { SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeL.itemName)); i++; }
+                        else { SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeR.itemName)); j++; }
+                        break;
+                    case < 4:
+                        if (predicate(String.Compare(nodeR.itemName, nodeL.itemName), 0)) { SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeL.itemName)); i++; }
+                        else { SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeR.itemName)); j++; }
+                        break;
+                    default:
+                        break;
+                }
+                k++;
+            }
+
+            while(i< n1)
+            {
+                MyInventoryNode<ValueType> nodeL = L.GetNodeByIndex(i);
+                SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeL.itemName)); i++; k++;
+            }
+
+            while(j < n2)
+            {
+                MyInventoryNode<ValueType>  nodeR = R.GetNodeByIndex(j);
+                SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeR.itemName)); j++; k++;
             }
         }
     }
