@@ -154,4 +154,24 @@ void Sort()
                 break;
         }
     }
+    else if (algorithm == "quick sort")
+    {
+        switch (method)
+        {
+            case "nome":
+                if (order == "crescente") { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) > float.Parse(b.ToString()), 3); break; }
+                else { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) < float.Parse(b.ToString()), 3); break; }
+            case "dano":
+                if (order == "crescente") { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) > float.Parse(b.ToString()), 0); break; }
+                else { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) < float.Parse(b.ToString()), 0); break; }
+            case "cooldown":
+                if (order == "crescente") { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) > float.Parse(b.ToString()), 1); break; }
+                else { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) < float.Parse(b.ToString()), 1); break; }
+            case "dano por segundo":
+                if (order == "crescente") { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) > float.Parse(b.ToString()), 2); break; }
+                else { itemsList.QuickSort(0, itemsList.Count() - 1, (a, b) => float.Parse(a.ToString()) < float.Parse(b.ToString()), 2); break; }
+            default:
+                break;
+        }
+    }
 }

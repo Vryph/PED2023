@@ -392,5 +392,47 @@ namespace Lista2_PED
                 SwapNodes(GetNodeByIndex(k), GetNodeByName(nodeR.itemName)); j++; k++;
             }
         }
+
+        public void QuickSort(int low, int high, Func<ValueType, ValueType, bool> predicate, int type)
+        {
+            if(low < high)
+            {
+                int pi = QuickSortPartition(low, high, predicate, type);
+
+                QuickSort(low, pi - 1, predicate, type);
+                QuickSort(pi + 1, high, predicate, type);
+            }
+        }
+
+        public int QuickSortPartition(int low, int high, Func<ValueType, ValueType, bool> predicate, int type)
+        {
+            MyInventoryNode<ValueType> pivot = GetNodeByIndex(high);
+
+            int i = (low - 1), j;
+
+            for(j = low; j <= high - 1; j++)
+            {
+                MyInventoryNode<ValueType> nodeJ = GetNodeByIndex(j);
+                switch (type)
+                {
+                    case < 1:
+                        if (predicate(pivot.value, nodeJ.value)) { i++;  SwapNodes(GetNodeByIndex(i), nodeJ); }
+                        break;
+                    case < 2:
+                        if (predicate(pivot.cooldown, nodeJ.cooldown)) { i++; SwapNodes(GetNodeByIndex(i), nodeJ); }
+                        break;
+                    case < 3:
+                        if (predicate(pivot.dps, nodeJ.dps)) { i++; SwapNodes(GetNodeByIndex(i), nodeJ); }
+                        break;
+                    case < 4:
+                        if (predicate(String.Compare(pivot.itemName, nodeJ.itemName), 0)) { i++; SwapNodes(GetNodeByIndex(i), nodeJ); }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            SwapNodes(GetNodeByIndex(i + 1), GetNodeByIndex(high));
+            return (i + 1);
+        }
     }
 }
