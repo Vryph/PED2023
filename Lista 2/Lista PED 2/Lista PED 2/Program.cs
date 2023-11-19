@@ -1,6 +1,6 @@
 ﻿using Lista2_PED;
 
-//Setup Lista de Itens
+//Setup Lista de Itens -------------------------------------------------------------------------
 MyInventoryList<float> itemsList = new MyInventoryList<float>();
 itemsList.Append(2.0f, "espada", 1.0f);
 itemsList.Append(10.0f, "machado", 3.5f);
@@ -14,11 +14,33 @@ itemsList.Append(2.5f, "pique", 1.0f);
 itemsList.Append(1.5f, "cutelo", 0.8f);
 int inventoryState = 0;
 string order = "crescente", method = "nome", algorithm = "bubble sort";
+//Setup Enciclopedia ---------------------------------------------------------------------------
+TreeNode<string> treeRoot = new TreeNode<string>("RAIZ", "boas vindas", "Seja bem-vindo à enciclopédia!", null);
+treeRoot.AddChild("CATEGORIA", "armas", "A arma correta é essencial para seu sucesso em uma batalha.");
+treeRoot.AddChild("CATEGORIA", "habilidades", "Habilidades definem sua capacidade de combate.");
+treeRoot.AddChild("CATEGORIA", "consumíveis", "Consumíveis dão vantagens temporárias em batalha.");
+
+treeRoot.GetChild(0).AddChild("ARMA", "punhos", "Quando todos recursos se esgotam, é preciso lutar com as próprias mãos.");
+treeRoot.GetChild(0).AddChild("ARMA", "espada", "Com uma lâmina afiada, a espada é uma opção bastante versátil.");
+treeRoot.GetChild(0).AddChild("ARMA", "arco", "Ideal para os antissociais, permite atingir os adversários de longe.");
+
+treeRoot.GetChild(1).AddChild("HABILIDADE", "defesa", "Quanto maior a habilidade de defesa, menor o dano tomado ao receber um ataque.");
+treeRoot.GetChild(1).AddChild("HABILIDADE", "ataque", "Quanto maior a habilidade de ataque, maior o dano aplicado ao usar uma arma.");
+
+treeRoot.GetChild(2).AddChild("CONSUMÍVEL", "curativo", "Restaura imediatamente um pouco dos seus pontos de vida.");
+treeRoot.GetChild(2).AddChild("CONSUMÍVEL", "fruta", "Sacia a fome, evitando a perda de pontos de vida.");
+treeRoot.GetChild(2).AddChild("CONSUMÍVEL", "água", "Sacia a sede, evitando a perda de pontos de vida.");
+
+TreeNode<string> selectedNode = treeRoot;
+
+
 
 Menu();
 
 void Menu()
 {
+    selectedNode = treeRoot;
+
     //Menu Options ----------------------------------------
     Console.Clear();
     Console.WriteLine($"Escolha uma das opcoes dos exercícios: ");
@@ -27,6 +49,7 @@ void Menu()
     Console.WriteLine($"3 - Grafo de Habilidades");
     string opcao = Console.ReadLine();
     if (opcao == "1") { Sorting(); }
+    else if (opcao == "2") { Wiki(); }
     else { opcao = "0"; Menu(); }
 }
 
@@ -174,4 +197,39 @@ void Sort()
                 break;
         }
     }
+}
+
+void Wiki()
+{
+    Console.Clear();
+    Console.WriteLine("WIKI");
+
+    selectedNode.Print();
+    if(selectedNode == treeRoot)
+    {
+        Console.WriteLine();
+        Console.WriteLine("Aperte qualquer outra coisa para voltar ao Menu.");
+
+        string option = Console.ReadLine();
+        if(int.TryParse(option, out int index))
+        {
+            if (index < selectedNode.ChildCount()) { selectedNode = selectedNode.GetChild(index); }
+            else { Menu(); }
+        }
+        else { Menu(); }
+    }
+    else
+    {
+        string option = Console.ReadLine();
+        if (int.TryParse(option, out int index))
+        {
+            
+            if (index <= selectedNode.ChildCount() && index != 0) { selectedNode = selectedNode.GetChild(index - 1); }
+            else { selectedNode = selectedNode.GetParent(); }
+        }
+        else { selectedNode = selectedNode.GetParent(); }
+    }
+
+    Wiki();
+
 }
