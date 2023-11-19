@@ -32,14 +32,53 @@ treeRoot.GetChild(2).AddChild("CONSUMÍVEL", "fruta", "Sacia a fome, evitando a 
 treeRoot.GetChild(2).AddChild("CONSUMÍVEL", "água", "Sacia a sede, evitando a perda de pontos de vida.");
 
 TreeNode<string> selectedNode = treeRoot;
+//Setup SkillTree -----------------------------------------------------------------------------------------
+List<GraphNode> allNodes = new List<GraphNode>();
+List<GraphNode> unlockableNodes= new List<GraphNode>();
+GraphNode Base = new GraphNode("Base", 1, 1, 1, 0);
+GraphNode AtaqueI = new GraphNode("Ataque I", 1, 0, 0, 10);
+GraphNode AtaqueII = new GraphNode("Ataque II", 2, 0, 0, 20);
+GraphNode DefesaI = new GraphNode("Defesa I", 0, 1, 0, 10);
+GraphNode DefesaII = new GraphNode("Defesa II", 0, 2, 0, 20);
+GraphNode VelocidadeI = new GraphNode("Velocidade I", 0, 0, 1, 10);
+GraphNode VelocidadeII = new GraphNode("Velocidade II", 0, 0, 2, 20);
+GraphNode EsquivaI = new GraphNode("Esquiva I", 0, 1, 1, 10);
+GraphNode EsquivaII = new GraphNode("Esquiva II", 0, 1, 1, 20);
+GraphNode SocoI = new GraphNode("Soco I", 1, 0, 0, 10);
+GraphNode SocoII = new GraphNode("Soco II", 1, 1, 0, 20);
+GraphNode ChuteI = new GraphNode("Chute I", 1, 0, 0, 10);
+GraphNode ChuteII = new GraphNode("Chute II", 1, 0, 1, 20);
+GraphNode Bloqueio = new GraphNode("Bloqueio", 1, 1, 1, 30);
+GraphNode Rasteira = new GraphNode("Rasteira", 1, 1, 1, 30);
+int defense, speed, xp, attack = defense = speed = xp = 0, skillPhase = 0;
 
+Base.BidirectionalConnect(AtaqueI); Base.BidirectionalConnect(DefesaI); Base.BidirectionalConnect(VelocidadeI);
+AtaqueI.BidirectionalConnect(SocoI); AtaqueI.BidirectionalConnect(ChuteI);
+DefesaI.BidirectionalConnect(DefesaII); DefesaI.BidirectionalConnect(EsquivaI);
+VelocidadeI.BidirectionalConnect(EsquivaI); VelocidadeI.BidirectionalConnect(VelocidadeII);
+VelocidadeII.BidirectionalConnect(EsquivaII); VelocidadeII.BidirectionalConnect(Rasteira);
+ChuteI.BidirectionalConnect(AtaqueII); ChuteI.BidirectionalConnect(ChuteII);
+SocoI.BidirectionalConnect(AtaqueII); SocoI.BidirectionalConnect(SocoII);
+EsquivaI.BidirectionalConnect(EsquivaII);
+DefesaII.BidirectionalConnect(EsquivaII); DefesaII.BidirectionalConnect(Bloqueio);
 
+Base.BreadthFirst(n => allNodes.Add(n));
+int count = allNodes.Count;
+
+//Inicio do Código ---------------------------------------------------------------------------------------------
 
 Menu();
 
 void Menu()
 {
     selectedNode = treeRoot;
+    attack = defense = speed = xp = 0;
+    skillPhase = 0;
+    for (int i = 0; i < count; i++)
+    {
+        allNodes[i].isActive = false; allNodes[i].xString = " ";
+    }
+    UnlockSkill(Base);
 
     //Menu Options ----------------------------------------
     Console.Clear();
@@ -50,6 +89,7 @@ void Menu()
     string opcao = Console.ReadLine();
     if (opcao == "1") { Sorting(); }
     else if (opcao == "2") { Wiki(); }
+    else if (opcao == "3") { SkillTree(); }
     else { opcao = "0"; Menu(); }
 }
 
@@ -113,7 +153,6 @@ void Sorting()
             break;
     }
 }
-
 
 void Sort()
 {
@@ -232,4 +271,74 @@ void Wiki()
 
     Wiki();
 
+}
+
+void SkillTree()
+{
+    Console.Clear();
+    //PrintSkillTree
+    if (skillPhase == 0)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Console.WriteLine($"[{allNodes[i].xString}]{allNodes[i].Name}");
+        }
+        Console.WriteLine();
+
+        Console.WriteLine($"Ataque: {attack}");
+        Console.WriteLine($"Defesa: {defense}");
+        Console.WriteLine($"Velocidade: {speed}");
+        Console.WriteLine($"XP: {xp}");
+        Console.WriteLine();
+
+        Console.WriteLine("Selecione uma opção:");
+        Console.WriteLine("0 - Voltar ao Menu");
+        Console.WriteLine("1 - Comprar habilidades");
+        Console.WriteLine("2 - Ganhar Exp");
+        string option = Console.ReadLine();
+        if(option == "0") { Menu(); }
+        else if(option == "1") { skillPhase = 1; }
+        else { xp += 5; }
+    }
+    else if(skillPhase == 1)
+    {
+        unlockableNodes.Clear();
+        for (int i = 0; i < count; i++)
+        {
+            if (allNodes[i].CheckUnlock()) { unlockableNodes.Add(allNodes[i]); }
+        }
+        int unlockCount = unlockableNodes.Count;
+        Console.WriteLine($"Ataque: {attack}");
+        Console.WriteLine($"Defesa: {defense}");
+        Console.WriteLine($"Velocidade: {speed}");
+        Console.WriteLine($"XP: {xp}");
+        Console.WriteLine();
+
+        Console.WriteLine("Selecione uma opção: ");
+        Console.WriteLine("0 - voltar");
+        for(int i = 0; i < unlockCount; i++)
+        {
+            Console.WriteLine($"{i + 1} - [{unlockableNodes[i].exp}]{unlockableNodes[i].Name}");
+        }
+        string option =  Console.ReadLine();
+        if(int.TryParse(option, out int index))
+        {
+            if(index <= unlockCount && index != 0) { GraphNode currentNode = unlockableNodes[index - 1]; if (xp >= currentNode.exp) { xp -= currentNode.exp; UnlockSkill(currentNode); } }
+            else if (index == 0) { skillPhase = 0; }
+        }
+    }
+    else { Menu(); }
+
+    SkillTree();
+}
+
+void UnlockSkill(GraphNode node)
+{
+    if (!node.isActive)
+    {
+        node.SetActive();
+        attack += node.attack;
+        defense += node.defense;
+        speed += node.speed;
+    }
 }
